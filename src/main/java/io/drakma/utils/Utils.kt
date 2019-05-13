@@ -1,4 +1,4 @@
-package io.drakma
+package io.drakma.utils
 
 import org.apache.commons.codec.digest.DigestUtils
 

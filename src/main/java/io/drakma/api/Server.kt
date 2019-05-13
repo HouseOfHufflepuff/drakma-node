@@ -1,14 +1,13 @@
-package io.drakma
+package io.drakma.api
 
 import com.google.gson.GsonBuilder
 import io.javalin.Javalin
 import com.google.gson.reflect.TypeToken
+import io.drakma.DrakmaChain
+import io.drakma.Transaction
 
 
-
-
-val drakma = DrakmaChain
-object Node {
+object Server {
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -16,7 +15,7 @@ object Node {
         val gson = GsonBuilder().create()
 
         app.get("/blocks") { ctx ->
-            ctx.json(drakma.chain)
+            ctx.json(DrakmaChain.chain)
         }
 
         app.post("/blocks/mine") { ctx ->
