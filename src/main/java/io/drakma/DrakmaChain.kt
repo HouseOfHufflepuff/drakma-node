@@ -1,31 +1,24 @@
 package io.drakma
 
-import org.apache.commons.codec.digest.DigestUtils
 
-object Blockchain {
+object DrakmaChain {
     val chain = mutableListOf<Block>()
     val latestBlock: Block
         get() = chain.last()
 
     init {
-        chain.add(Block(0, "0", "The Times 11-May-2019 Chancellor on brink of second bailout for banks"))
+        val genesisTransaction = ArrayList<Transaction>()
+        genesisTransaction.add(Transaction("The Times 11-May-2019 Chancellor on brink of second bailout for banks"))
+        chain.add(Block(0, "0", genesisTransaction))
     }
 
-    fun mineBlock(data: Any, nonce: Int): Block? {
+    fun mineBlock(transactions: ArrayList<Transaction>, nonce: Int): Block? {
         if(isValidProof(nonce)) {
-            val block = Block(chain.size, latestBlock.hash, data)
+            val block = Block(chain.size, latestBlock.hash, transactions)
             addNewBlock(block)
             return block
         }
         return null
-    }
-
-    fun calculateHash(nonce: Int): String {
-        val hash = DigestUtils.sha256Hex(
-            latestBlock.hash +
-                    Integer.toString(nonce)
-        )
-        return hash
     }
 
     private fun addNewBlock(block: Block) {
@@ -35,8 +28,11 @@ object Blockchain {
     private fun isValidProof(nonce: Int): Boolean {
         var isValidProof = false
         var targetLeadingZeroes = Utils.getDificultyString(Constants.difficulty)
-        val hash = calculateHash(nonce)
-        if(hash.substring(0, Constants.difficulty).equals(targetLeadingZeroes)) {
+        val nonceHash = Utils.calculateHash(
+            latestBlock.hash +
+                    Integer.toString(nonce)
+        )
+        if(nonceHash.substring(0, Constants.difficulty).equals(targetLeadingZeroes)) {
             isValidProof = true
         }
         return isValidProof

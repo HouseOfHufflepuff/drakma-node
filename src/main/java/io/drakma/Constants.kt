@@ -1,5 +1,5 @@
 package io.drakma
 
 object Constants {
-    val difficulty = 2
+    val difficulty = 4
 }

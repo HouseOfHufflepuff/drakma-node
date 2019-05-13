@@ -1,18 +1,15 @@
 package io.drakma
 
 
-import org.apache.commons.codec.digest.DigestUtils
 import java.util.*
 
 class Block(val index: Int,
             val previousHash: String,
-            val data: Any) {
+            val transactions: ArrayList<Transaction>) {
 
-    val hash = calculateHash()
+
     val timestamp: Long = Date().time
+    val merkleRoot = MerkleTree.getMerkleRoot(transactions)
+    val hash = Utils.calculateHash(index.toString() + previousHash + timestamp + merkleRoot)
 
-    private fun calculateHash(): String {
-        val input = (index.toString() + previousHash + timestamp + data).toByteArray()
-        return DigestUtils.sha256Hex(input)
-    }
 }
